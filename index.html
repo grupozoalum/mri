@@ -38,6 +38,7 @@ body {
   transform: translate(-50%,-50%);
   transition: transform 0.05s linear;
 }
+@media (pointer: coarse) { #cursor-glow { display: none; } }
 
 /* ── MESH BACKGROUND ───────────────────────── */
 .mesh-bg { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
@@ -88,6 +89,53 @@ nav.scrolled {
 }
 .nav-cta:hover { transform: translateY(-2px) !important; box-shadow: 0 8px 28px rgba(27,134,148,0.5) !important; }
 .nav-cta::after { display: none !important; }
+
+/* ── HAMBURGER ──────────────────────────────── */
+.hamburger {
+  display: none;
+  flex-direction: column; justify-content: center; align-items: center;
+  gap: 5px; width: 44px; height: 44px;
+  background: var(--glass); border: 1px solid var(--glass-border);
+  border-radius: 12px; cursor: pointer; flex-shrink: 0;
+  transition: background 0.25s, border-color 0.25s;
+  z-index: 1010;
+}
+.hamburger:hover { background: rgba(0,212,232,0.1); border-color: rgba(0,212,232,0.4); }
+.hamburger span {
+  width: 20px; height: 2px; background: var(--white);
+  border-radius: 2px; transition: all 0.3s ease;
+  display: block;
+}
+.hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* ── MOBILE DRAWER ──────────────────────────── */
+.mobile-drawer {
+  display: none;
+  position: fixed; inset: 0; z-index: 999;
+  padding-top: 80px;
+  background: rgba(10,22,40,0.97);
+  backdrop-filter: blur(24px);
+  flex-direction: column; align-items: center; justify-content: center;
+  gap: 12px;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.mobile-drawer.open { opacity: 1; pointer-events: all; }
+.mobile-drawer a {
+  color: rgba(255,255,255,0.85); text-decoration: none;
+  font-size: 22px; font-weight: 700; letter-spacing: -0.3px;
+  padding: 16px 40px; border-radius: 16px;
+  transition: all 0.2s; width: 100%; max-width: 320px; text-align: center;
+  border: 1px solid transparent;
+}
+.mobile-drawer a:hover { background: var(--glass); border-color: var(--glass-border); color: var(--cyan); }
+.mobile-drawer .mobile-cta {
+  background: linear-gradient(135deg, var(--teal), var(--cyan)) !important;
+  color: var(--navy) !important; font-weight: 800 !important;
+  margin-top: 12px; border: none !important;
+}
 
 /* ── HERO ──────────────────────────────────── */
 #hero {
@@ -151,20 +199,20 @@ nav.scrolled {
 }
 .badge-dot {
   width: 6px; height: 6px; border-radius: 50%; background: var(--cyan);
-  animation: pulse-dot 2s ease infinite;
+  animation: pulse-dot 2s ease infinite; flex-shrink: 0;
 }
 @keyframes pulse-dot {
   0%,100% { transform:scale(1); opacity:1; }
   50%     { transform:scale(1.8); opacity:0.4; }
 }
 .hero-headline {
-  font-size: clamp(52px, 6.5vw, 96px);
+  font-size: clamp(40px, 6.5vw, 96px);
   font-weight: 900; line-height: 1.0; letter-spacing: -3px;
   margin-bottom: 0px;
   animation: fade-up 0.8s 0.15s ease both;
 }
 .hero-service-switcher {
-  font-size: clamp(52px, 6.5vw, 96px);
+  font-size: clamp(40px, 6.5vw, 96px);
   font-weight: 900; line-height: 1.0; letter-spacing: -3px;
   margin-bottom: 36px; height: 1.25em; overflow: hidden;
   animation: fade-up 0.8s 0.2s ease both;
@@ -193,7 +241,7 @@ nav.scrolled {
   100%    { transform: translateY(-80%); }
 }
 .hero-sub {
-  font-size: 18px; color: rgba(255,255,255,0.65);
+  font-size: clamp(15px, 2vw, 18px); color: rgba(255,255,255,0.65);
   max-width: 520px; line-height: 1.75; margin-bottom: 52px;
   animation: fade-up 0.8s 0.3s ease both;
 }
@@ -209,7 +257,7 @@ nav.scrolled {
   text-decoration: none; border: none; cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
   box-shadow: 0 8px 32px rgba(0,212,232,0.35);
-  letter-spacing: 0.2px;
+  letter-spacing: 0.2px; white-space: nowrap;
 }
 .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 18px 48px rgba(0,212,232,0.45); }
 .btn-secondary {
@@ -218,7 +266,7 @@ nav.scrolled {
   padding: 17px 30px; border-radius: 50px;
   text-decoration: none; border: 1px solid var(--glass-border);
   cursor: pointer; background: var(--glass);
-  transition: all 0.25s; backdrop-filter: blur(8px);
+  transition: all 0.25s; backdrop-filter: blur(8px); white-space: nowrap;
 }
 .btn-secondary:hover { border-color: rgba(0,212,232,0.5); color: var(--cyan); background: rgba(0,212,232,0.06); }
 
@@ -277,22 +325,22 @@ nav.scrolled {
 /* ── MARQUEE ──────────────────────────────────── */
 .marquee-section {
   background: linear-gradient(90deg, var(--teal) 0%, #0E6B78 40%, var(--teal-light) 70%, var(--teal) 100%);
-  padding: 20px 0; overflow: hidden; position: relative;
+  padding: 18px 0; overflow: hidden; position: relative;
 }
 .marquee-section::before, .marquee-section::after {
-  content: ''; position: absolute; top: 0; bottom: 0; width: 80px; z-index: 2;
+  content: ''; position: absolute; top: 0; bottom: 0; width: 60px; z-index: 2;
 }
 .marquee-section::before { left: 0; background: linear-gradient(90deg, var(--teal), transparent); }
 .marquee-section::after  { right: 0; background: linear-gradient(270deg, var(--teal), transparent); }
 .marquee-track { display: flex; gap: 0; animation: marquee 28s linear infinite; white-space: nowrap; }
 .marquee-item {
-  flex-shrink: 0; padding: 0 36px;
-  font-size: 13px; font-weight: 700; letter-spacing: 2px;
+  flex-shrink: 0; padding: 0 28px;
+  font-size: 12px; font-weight: 700; letter-spacing: 2px;
   text-transform: uppercase; color: rgba(255,255,255,0.9);
-  display: flex; align-items: center; gap: 16px;
+  display: flex; align-items: center; gap: 12px;
 }
-.marquee-sep { color: rgba(255,255,255,0.35); font-size: 16px; }
-.marquee-em { font-size: 16px; }
+.marquee-sep { color: rgba(255,255,255,0.35); font-size: 14px; }
+.marquee-em { font-size: 14px; }
 @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
 /* ── SECTION COMMONS ──────────────────────────── */
@@ -303,9 +351,9 @@ section { position: relative; }
   color: var(--cyan); margin-bottom: 14px;
   display: flex; align-items: center; gap: 12px;
 }
-.section-label::before { content: ''; width: 28px; height: 1.5px; background: var(--cyan); }
-.section-title { font-size: clamp(38px, 4.5vw, 60px); font-weight: 800; line-height: 1.05; letter-spacing: -1.5px; }
-.section-sub { font-size: 17px; color: var(--gray); line-height: 1.75; max-width: 560px; margin-top: 16px; }
+.section-label::before { content: ''; width: 28px; height: 1.5px; background: var(--cyan); flex-shrink: 0; }
+.section-title { font-size: clamp(30px, 4.5vw, 60px); font-weight: 800; line-height: 1.1; letter-spacing: -1.5px; }
+.section-sub { font-size: clamp(15px, 1.8vw, 17px); color: var(--gray); line-height: 1.75; max-width: 560px; margin-top: 16px; }
 
 /* ── NOSOTROS ─────────────────────────────────── */
 #nosotros { padding: 130px 0 80px; }
@@ -358,10 +406,10 @@ section { position: relative; }
 }
 .service-mini-card:hover::before { opacity: 1; }
 .service-mini-card:hover { border-color: rgba(0,212,232,0.5); transform: translateY(-10px); box-shadow: 0 28px 56px rgba(0,0,0,0.35), 0 0 40px rgba(0,212,232,0.08); }
-.card-emoji { font-size: 40px; margin-bottom: 8px; display: block; filter: drop-shadow(0 4px 12px rgba(0,212,232,0.3)); transition: transform 0.3s; }
+.card-emoji { font-size: 36px; margin-bottom: 8px; display: block; filter: drop-shadow(0 4px 12px rgba(0,212,232,0.3)); transition: transform 0.3s; }
 .service-mini-card:hover .card-emoji { transform: scale(1.15) rotate(-5deg); }
 .card-icon-wrap {
-  width: 72px; height: 72px; border-radius: 18px; margin: 0 auto 20px;
+  width: 72px; height: 72px; border-radius: 18px; margin: 0 auto 16px;
   background: linear-gradient(135deg, rgba(27,134,148,0.18), rgba(0,212,232,0.08));
   border: 1px solid rgba(27,134,148,0.3);
   display: flex; align-items: center; justify-content: center;
@@ -370,10 +418,10 @@ section { position: relative; }
 .service-mini-card:hover .card-icon-wrap { background: linear-gradient(135deg, var(--teal), var(--cyan)); border-color: transparent; transform: scale(1.1) rotate(3deg); }
 .card-icon-wrap svg { width: 34px; height: 34px; fill: var(--teal); transition: fill 0.3s; }
 .service-mini-card:hover .card-icon-wrap svg { fill: white; }
-.service-mini-card h3 { font-size: 16px; font-weight: 800; margin-bottom: 10px; letter-spacing: -0.3px; }
-.service-mini-card p  { font-size: 13.5px; color: var(--gray); line-height: 1.65; }
+.service-mini-card h3 { font-size: 15px; font-weight: 800; margin-bottom: 10px; letter-spacing: -0.3px; }
+.service-mini-card p  { font-size: 13px; color: var(--gray); line-height: 1.65; }
 .card-tag {
-  display: inline-block; margin-top: 16px;
+  display: inline-block; margin-top: 14px;
   background: rgba(0,212,232,0.1); border: 1px solid rgba(0,212,232,0.2);
   color: var(--cyan); border-radius: 50px; padding: 4px 14px;
   font-size: 11px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; transition: all 0.3s;
@@ -392,17 +440,17 @@ section { position: relative; }
   background-size: 32px 32px;
 }
 .counters-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; position: relative; z-index: 1; }
-.counter-item { text-align: center; padding: 52px 24px; border-right: 1px solid rgba(255,255,255,0.08); position: relative; }
+.counter-item { text-align: center; padding: 48px 20px; border-right: 1px solid rgba(255,255,255,0.08); position: relative; }
 .counter-item:last-child { border-right: none; }
-.counter-emoji { font-size: 32px; margin-bottom: 12px; display: block; }
+.counter-emoji { font-size: 28px; margin-bottom: 12px; display: block; }
 .counter-num {
-  font-size: 62px; font-weight: 900; line-height: 1; letter-spacing: -2px;
+  font-size: clamp(42px, 5vw, 62px); font-weight: 900; line-height: 1; letter-spacing: -2px;
   background: linear-gradient(135deg, var(--white) 0%, var(--cyan) 100%);
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
   margin-bottom: 8px;
 }
-.counter-suffix { font-size: 46px; }
-.counter-label { font-size: 13px; color: rgba(255,255,255,0.65); font-weight: 500; letter-spacing: 0.5px; }
+.counter-suffix { font-size: clamp(32px, 3.5vw, 46px); }
+.counter-label { font-size: 12px; color: rgba(255,255,255,0.65); font-weight: 500; letter-spacing: 0.5px; }
 
 /* ── SERVICIOS ────────────────────────────────── */
 #servicios { padding: 130px 0; background: var(--navy2); }
@@ -415,7 +463,7 @@ section { position: relative; }
 .tab-btn {
   padding: 10px 24px; border-radius: 50px; border: none; cursor: pointer;
   font-size: 14px; font-weight: 600; font-family: 'Inter', sans-serif;
-  background: transparent; color: var(--gray); transition: all 0.25s;
+  background: transparent; color: var(--gray); transition: all 0.25s; white-space: nowrap;
 }
 .tab-btn.active { background: linear-gradient(135deg, var(--teal), var(--cyan)); color: var(--navy); box-shadow: 0 4px 18px rgba(0,212,232,0.3); }
 .tab-btn:hover:not(.active) { color: var(--white); }
@@ -435,14 +483,14 @@ section { position: relative; }
 .service-panel-visual svg { width: 100%; max-height: 300px; position: relative; z-index: 1; }
 .service-panel-content { flex: 1; }
 .service-panel-content h2 {
-  font-size: 44px; font-weight: 900; letter-spacing: -1.5px; margin-bottom: 20px;
+  font-size: clamp(32px, 4vw, 44px); font-weight: 900; letter-spacing: -1.5px; margin-bottom: 20px;
   background: linear-gradient(135deg, var(--white), var(--cyan));
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
 }
-.service-panel-content p { font-size: 16px; color: var(--gray); line-height: 1.75; margin-bottom: 32px; }
+.service-panel-content p { font-size: 15px; color: var(--gray); line-height: 1.75; margin-bottom: 32px; }
 .service-bullets { list-style: none; margin-bottom: 40px; }
 .service-bullets li {
-  display: flex; align-items: center; gap: 14px; font-size: 15px; color: rgba(255,255,255,0.85);
+  display: flex; align-items: center; gap: 14px; font-size: 14px; color: rgba(255,255,255,0.85);
   padding: 12px 0; border-bottom: 1px solid var(--glass-border);
 }
 .service-bullets li:last-child { border-bottom: none; }
@@ -480,25 +528,23 @@ section { position: relative; }
 }
 .process-step:hover { border-color: rgba(0,212,232,0.4); transform: translateY(-8px); background: rgba(0,212,232,0.04); box-shadow: 0 20px 48px rgba(0,0,0,0.3); }
 .step-num {
-  width: 72px; height: 72px; border-radius: 50%; margin: 0 auto 20px;
+  width: 68px; height: 68px; border-radius: 50%; margin: 0 auto 16px;
   background: linear-gradient(135deg, var(--teal), var(--cyan));
   display: flex; align-items: center; justify-content: center;
-  font-size: 22px; font-weight: 900; color: var(--navy);
+  font-size: 20px; font-weight: 900; color: var(--navy);
   position: relative; z-index: 1; box-shadow: 0 8px 24px rgba(0,212,232,0.25);
 }
-.step-emoji { font-size: 28px; margin-bottom: 16px; display: block; }
-.process-step h4 { font-size: 17px; font-weight: 800; margin-bottom: 10px; }
-.process-step p  { font-size: 14px; color: var(--gray); line-height: 1.6; }
+.step-emoji { font-size: 26px; margin-bottom: 14px; display: block; }
+.process-step h4 { font-size: 16px; font-weight: 800; margin-bottom: 10px; }
+.process-step p  { font-size: 13px; color: var(--gray); line-height: 1.6; }
 
-/* ══════════════════════════════════════════
-   BOLSA DE TRABAJO — UPGRADED
-   ══════════════════════════════════════════ */
+/* ── BOLSA DE TRABAJO ─────────────────────────── */
 #bolsa { padding: 130px 0; background: var(--navy2); }
 .jobs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 48px; }
 
 .job-card {
   background: var(--glass); border: 1px solid var(--glass-border);
-  border-radius: 20px; padding: 28px 32px;
+  border-radius: 20px; padding: 24px 28px;
   display: flex; align-items: center; justify-content: space-between;
   transition: all 0.3s; cursor: pointer; gap: 16px; position: relative; overflow: hidden;
 }
@@ -514,18 +560,18 @@ section { position: relative; }
   transform: translateX(6px);
   box-shadow: 0 8px 32px rgba(0,0,0,0.2);
 }
-.job-emoji { font-size: 28px; flex-shrink: 0; }
-.job-info { flex: 1; }
-.job-info h4 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+.job-emoji { font-size: 26px; flex-shrink: 0; }
+.job-info { flex: 1; min-width: 0; }
+.job-info h4 { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
 .job-meta { display: flex; gap: 8px; flex-wrap: wrap; }
 .job-tag {
-  font-size: 12px; font-weight: 600; padding: 4px 12px;
+  font-size: 11px; font-weight: 600; padding: 3px 10px;
   border-radius: 50px; letter-spacing: 0.3px;
 }
 .tag-area { background: rgba(27,134,148,0.18); color: var(--teal-light); }
 .tag-type { background: rgba(0,212,232,0.1); color: var(--cyan); }
 .job-arrow {
-  width: 42px; height: 42px; border-radius: 14px;
+  width: 40px; height: 40px; border-radius: 12px;
   border: 1px solid var(--glass-border);
   display: flex; align-items: center; justify-content: center; transition: all 0.25s; flex-shrink: 0;
 }
@@ -560,12 +606,10 @@ section { position: relative; }
 }
 .modal-overlay.open .modal-card { transform: translateY(0) scale(1); }
 
-/* Custom scrollbar for modal */
 .modal-card::-webkit-scrollbar { width: 4px; }
 .modal-card::-webkit-scrollbar-track { background: transparent; }
 .modal-card::-webkit-scrollbar-thumb { background: rgba(0,212,232,0.2); border-radius: 4px; }
 
-/* Top shimmer line */
 .modal-card::before {
   content: ''; position: absolute; top: 0; left: 40px; right: 40px; height: 1px;
   background: linear-gradient(90deg, transparent, rgba(0,212,232,0.5), transparent);
@@ -582,12 +626,12 @@ section { position: relative; }
 }
 .modal-close:hover { border-color: rgba(0,212,232,0.4); color: var(--white); background: rgba(0,212,232,0.1); }
 
-.modal-header { text-align: center; margin-bottom: 36px; }
+.modal-header { text-align: center; margin-bottom: 32px; }
 .modal-job-icon {
-  font-size: 48px; display: block; margin-bottom: 16px;
+  font-size: 44px; display: block; margin-bottom: 14px;
   filter: drop-shadow(0 4px 16px rgba(0,212,232,0.4));
 }
-.modal-header h3 { font-size: 24px; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 8px; }
+.modal-header h3 { font-size: 22px; font-weight: 900; letter-spacing: -0.5px; margin-bottom: 8px; }
 .modal-area-badge {
   display: inline-flex; align-items: center; gap: 6px;
   background: rgba(0,212,232,0.1); border: 1px solid rgba(0,212,232,0.25);
@@ -595,7 +639,6 @@ section { position: relative; }
   font-size: 12px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase;
 }
 
-/* Form styles */
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .form-group { display: flex; flex-direction: column; gap: 8px; }
 .form-group.full { grid-column: 1 / -1; }
@@ -606,7 +649,7 @@ section { position: relative; }
 .form-input, .form-textarea, .form-select {
   background: rgba(255,255,255,0.04);
   border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 14px; padding: 14px 18px;
+  border-radius: 14px; padding: 13px 16px;
   font-size: 14px; font-family: 'Inter', sans-serif;
   color: var(--white); outline: none;
   transition: border-color 0.25s, background 0.25s, box-shadow 0.25s;
@@ -618,7 +661,7 @@ section { position: relative; }
   background: rgba(0,212,232,0.04);
   box-shadow: 0 0 0 3px rgba(0,212,232,0.08);
 }
-.form-textarea { resize: vertical; min-height: 110px; }
+.form-textarea { resize: vertical; min-height: 100px; }
 .form-select {
   appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%238A9BB0' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
@@ -629,25 +672,23 @@ section { position: relative; }
 }
 .form-select option { background: #0F2035; color: var(--white); }
 
-/* File upload area */
 .file-upload-area {
   border: 2px dashed rgba(0,212,232,0.2);
-  border-radius: 14px; padding: 28px 20px;
+  border-radius: 14px; padding: 24px 20px;
   text-align: center; cursor: pointer;
   transition: all 0.25s; position: relative; overflow: hidden;
 }
 .file-upload-area:hover { border-color: rgba(0,212,232,0.5); background: rgba(0,212,232,0.03); }
 .file-upload-area.has-file { border-color: rgba(0,212,232,0.5); background: rgba(0,212,232,0.06); border-style: solid; }
 .file-upload-area input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
-.file-upload-icon { font-size: 28px; margin-bottom: 8px; display: block; }
+.file-upload-icon { font-size: 26px; margin-bottom: 8px; display: block; }
 .file-upload-text { font-size: 13px; color: var(--gray); }
 .file-upload-text strong { color: var(--cyan); }
 .file-name-display { font-size: 12px; color: var(--cyan); font-weight: 600; margin-top: 8px; display: none; }
 .file-name-display.show { display: block; }
 
-/* Submit button */
 .btn-submit-job {
-  width: 100%; padding: 18px; border-radius: 14px; border: none; cursor: pointer;
+  width: 100%; padding: 17px; border-radius: 14px; border: none; cursor: pointer;
   background: linear-gradient(135deg, var(--teal), var(--cyan));
   color: var(--navy); font-weight: 800; font-size: 15px;
   font-family: 'Inter', sans-serif; letter-spacing: 0.3px;
@@ -662,9 +703,6 @@ section { position: relative; }
   font-size: 11.5px; color: var(--gray); text-align: center;
   margin-top: 14px; line-height: 1.6;
 }
-.form-note a { color: var(--cyan); text-decoration: none; }
-
-/* Required asterisk */
 .req { color: var(--cyan); margin-left: 2px; }
 
 /* ── CTA CONTACTO ─────────────────────────────── */
@@ -684,15 +722,15 @@ section { position: relative; }
 .cta-blob-a { width:300px;height:300px; top:-100px; left:-60px; }
 .cta-blob-b { width:250px;height:250px; bottom:-80px; right:-40px; }
 @keyframes rotate-glow { to { transform: rotate(360deg); } }
-.cta-card h2 { font-size: clamp(38px, 4.5vw, 60px); font-weight: 900; letter-spacing: -1.5px; margin-bottom: 20px; position: relative; z-index: 1; }
-.cta-card p { font-size: 18px; color: var(--gray); margin-bottom: 44px; position: relative; z-index: 1; line-height: 1.7; }
+.cta-card h2 { font-size: clamp(28px, 4.5vw, 60px); font-weight: 900; letter-spacing: -1.5px; margin-bottom: 20px; position: relative; z-index: 1; }
+.cta-card p { font-size: clamp(15px, 1.8vw, 18px); color: var(--gray); margin-bottom: 44px; position: relative; z-index: 1; line-height: 1.7; }
 .cta-actions { display: flex; gap: 16px; justify-content: center; position: relative; z-index: 1; flex-wrap: wrap; }
 .whatsapp-btn {
   display: inline-flex; align-items: center; gap: 10px;
   background: linear-gradient(135deg, #25D366, #20b858); color: white;
   font-weight: 800; font-size: 15px; padding: 17px 38px; border-radius: 50px;
   text-decoration: none; transition: transform 0.2s, box-shadow 0.2s;
-  box-shadow: 0 8px 28px rgba(37,211,102,0.35);
+  box-shadow: 0 8px 28px rgba(37,211,102,0.35); white-space: nowrap;
 }
 .whatsapp-btn:hover { transform: translateY(-3px); box-shadow: 0 18px 40px rgba(37,211,102,0.45); }
 
@@ -700,12 +738,12 @@ section { position: relative; }
 footer { background: #050D19; border-top: 1px solid var(--glass-border); padding: 64px 0 40px; }
 .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 60px; margin-bottom: 48px; }
 .footer-logo { margin-bottom: 16px; }
-.footer-logo svg { height: 34px; width: auto; }
+.footer-logo svg { height: 30px; width: auto; }
 .footer-tagline { font-size: 14px; color: var(--gray); line-height: 1.7; max-width: 260px; }
 .footer-col h5 { font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--cyan); margin-bottom: 20px; }
 .footer-col a { display: block; color: var(--gray); text-decoration: none; font-size: 14px; margin-bottom: 12px; transition: color 0.2s; }
 .footer-col a:hover { color: var(--white); }
-.footer-bottom { border-top: 1px solid var(--glass-border); padding-top: 24px; display: flex; justify-content: space-between; align-items: center; }
+.footer-bottom { border-top: 1px solid var(--glass-border); padding-top: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
 .footer-copy { font-size: 13px; color: var(--gray); }
 
 /* ── ANIMATIONS ───────────────────────────────── */
@@ -719,8 +757,8 @@ footer { background: #050D19; border-top: 1px solid var(--glass-border); padding
 
 /* ── FLOATING WHATSAPP ────────────────────────── */
 .fab-whatsapp {
-  position: fixed; bottom: 32px; right: 32px; z-index: 999;
-  width: 60px; height: 60px; border-radius: 50%;
+  position: fixed; bottom: 28px; right: 28px; z-index: 999;
+  width: 56px; height: 56px; border-radius: 50%;
   background: linear-gradient(135deg, #25D366, #20b858);
   box-shadow: 0 8px 24px rgba(37,211,102,0.4);
   display: flex; align-items: center; justify-content: center;
@@ -732,7 +770,7 @@ footer { background: #050D19; border-top: 1px solid var(--glass-border); padding
   0%,100% { box-shadow: 0 8px 24px rgba(37,211,102,0.4); }
   50%     { box-shadow: 0 8px 36px rgba(37,211,102,0.6), 0 0 0 8px rgba(37,211,102,0.07); }
 }
-.fab-whatsapp svg { width: 28px; height: 28px; fill: white; }
+.fab-whatsapp svg { width: 26px; height: 26px; fill: white; }
 
 /* ── SUCCESS STATE ────────────────────────────── */
 .modal-success {
@@ -741,7 +779,7 @@ footer { background: #050D19; border-top: 1px solid var(--glass-border); padding
 }
 .modal-success.show { display: block; }
 .modal-success-icon {
-  font-size: 64px; display: block; margin-bottom: 20px;
+  font-size: 60px; display: block; margin-bottom: 20px;
   animation: bounce-in 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
 }
 @keyframes bounce-in {
@@ -753,35 +791,211 @@ footer { background: #050D19; border-top: 1px solid var(--glass-border); padding
 .modal-form-body { transition: opacity 0.3s; }
 .modal-form-body.hidden { opacity: 0; pointer-events: none; }
 
-/* ── RESPONSIVE ───────────────────────────────── */
+/* ══════════════════════════════════════════════════
+   RESPONSIVE — BREAKPOINTS COMPLETOS
+   ══════════════════════════════════════════════════ */
+
+/* ── 1200px — Pantallas medianas-grandes ─────── */
+@media (max-width: 1200px) {
+  nav { padding: 20px 40px; }
+  nav.scrolled { padding: 14px 40px; }
+  .nav-links { gap: 24px; }
+  .hero-content { padding: 120px 40px 80px; }
+  .container { padding: 0 40px; }
+  .hero-float-cards { right: 40px; }
+  .service-panel-visual { flex: 0 0 360px; }
+  .footer-grid { gap: 40px; }
+}
+
+/* ── 1024px — Tablets landscape / laptops pequeños ── */
 @media (max-width: 1024px) {
   .hero-float-cards { display: none; }
-  .hero-content { padding: 120px 40px 80px; }
+  .hero-content { padding: 100px 40px 80px; }
+  .hero-scroll { bottom: 60px; left: 40px; }
+  .services-mini-grid { grid-template-columns: 1fr 1fr; gap: 16px; }
+  .service-panel.active { gap: 48px; }
+  .service-panel-visual { flex: 0 0 320px; min-height: 300px; }
+  .about-grid { gap: 48px; }
 }
+
+/* ── 900px — Tablets portrait ─────────────────── */
 @media (max-width: 900px) {
+  /* Nav */
   nav { padding: 16px 24px; }
   nav.scrolled { padding: 12px 24px; }
   .nav-links { display: none; }
-  .hero-content { padding: 100px 24px 60px; }
+  .hamburger { display: flex; }
+  .mobile-drawer { display: flex; }
+
+  /* Container */
   .container { padding: 0 24px; }
-  .about-grid { grid-template-columns: 1fr; }
-  .services-mini-grid { grid-template-columns: 1fr 1fr; }
+
+  /* Hero */
+  .hero-content { padding: 96px 24px 64px; }
+  .hero-scroll { display: none; }
+  .hero-badge { font-size: 11px; padding: 7px 16px; margin-bottom: 24px; }
+  .hero-headline { letter-spacing: -2px; }
+  .hero-service-switcher { letter-spacing: -2px; margin-bottom: 24px; }
+  .hero-sub { margin-bottom: 36px; }
+  .hero-actions { gap: 12px; }
+  .btn-primary, .btn-secondary { font-size: 14px; padding: 14px 26px; }
+
+  /* About */
+  .about-grid { grid-template-columns: 1fr; gap: 40px; }
+  .about-hub { min-height: 300px; order: -1; }
+  #nosotros { padding: 90px 0 60px; }
+
+  /* Counters */
   .counters-grid { grid-template-columns: 1fr 1fr; }
   .counter-item { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08); }
-  .process-grid { grid-template-columns: 1fr 1fr; }
-  .process-connector { display: none; }
-  .jobs-grid { grid-template-columns: 1fr; }
+  .counter-item:last-child { border-bottom: none; }
+  .counter-item:nth-child(odd) { border-right: 1px solid rgba(255,255,255,0.08); }
+  #impacto { padding: 72px 0; }
+
+  /* Services */
+  #servicios { padding: 90px 0; }
   .services-header { flex-direction: column; gap: 24px; align-items: flex-start; }
-  .service-panel.active { flex-direction: column; }
-  .service-panel-visual { flex: none; width: 100%; }
-  .footer-grid { grid-template-columns: 1fr 1fr; }
-  .cta-card { padding: 48px 24px; }
+  .services-tabs {
+    overflow-x: auto; -webkit-overflow-scrolling: touch;
+    border-radius: 16px; padding: 6px; scrollbar-width: none; width: 100%;
+  }
+  .services-tabs::-webkit-scrollbar { display: none; }
+  .tab-btn { font-size: 13px; padding: 9px 18px; white-space: nowrap; }
+  .service-panel.active { flex-direction: column; gap: 32px; }
+  .service-panel-visual { flex: none; width: 100%; max-width: 100%; min-height: 240px; }
+  .service-panel-visual svg { max-height: 200px; }
+  .service-panel-content h2 { font-size: 32px; }
+  .btn-whatsapp-service { width: 100%; justify-content: center; font-size: 14px; padding: 15px 24px; }
+
+  /* Process */
+  #proceso { padding: 90px 0; }
+  .process-grid { grid-template-columns: 1fr 1fr; gap: 16px; }
+  .process-connector { display: none; }
+
+  /* Jobs */
+  #bolsa { padding: 90px 0; }
+  .jobs-grid { grid-template-columns: 1fr; }
+
+  /* CTA */
+  #contacto { padding: 90px 0; }
+  .cta-card { padding: 60px 32px; border-radius: 28px; }
   .cta-actions { flex-direction: column; align-items: center; }
-  .about-hub { min-height: 320px; }
-  .modal-card { padding: 36px 28px; }
+  .whatsapp-btn, .btn-secondary { width: 100%; max-width: 340px; justify-content: center; }
+
+  /* Footer */
+  footer { padding: 48px 0 32px; }
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; margin-bottom: 32px; }
+
+  /* Modal */
+  .modal-overlay { padding: 16px; align-items: flex-end; }
+  .modal-card { padding: 36px 28px; border-radius: 28px 28px 20px 20px; max-height: 85vh; }
   .form-grid { grid-template-columns: 1fr; }
-  .services-tabs { flex-wrap: wrap; }
+}
+
+/* ── 640px — Smartphones grandes ──────────────── */
+@media (max-width: 640px) {
+  #nosotros-cards { margin-top: 64px; }
+  .services-mini-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .service-mini-card { padding: 24px 16px 20px; border-radius: 18px; }
+  .card-icon-wrap { width: 56px; height: 56px; border-radius: 14px; margin-bottom: 12px; }
+  .card-icon-wrap svg { width: 26px; height: 26px; }
+  .card-emoji { font-size: 28px; }
+  .service-mini-card h3 { font-size: 13px; }
+  .service-mini-card p { font-size: 12px; }
+  .card-tag { font-size: 10px; margin-top: 10px; }
+
+  .about-feature { padding: 16px; border-radius: 16px; gap: 12px; }
+  .feature-icon { width: 40px; height: 40px; border-radius: 12px; font-size: 18px; }
+  .feature-text h4 { font-size: 14px; }
+  .feature-text p { font-size: 13px; }
+
+  .process-grid { grid-template-columns: 1fr; gap: 14px; }
+  .process-step { padding: 28px 20px; }
+  .step-num { width: 56px; height: 56px; font-size: 18px; margin-bottom: 14px; }
+
+  .job-card { padding: 20px; border-radius: 16px; }
+  .job-info h4 { font-size: 14px; }
+
+  .footer-grid { grid-template-columns: 1fr; gap: 28px; }
+  .footer-tagline { max-width: 100%; }
+  .footer-bottom { flex-direction: column; align-items: flex-start; gap: 10px; }
+
+  .modal-card { padding: 28px 20px; border-radius: 24px 24px 16px 16px; }
+  .modal-header h3 { font-size: 19px; }
+  .modal-job-icon { font-size: 40px; }
+  .btn-submit-job { font-size: 14px; padding: 15px; }
+}
+
+/* ── 480px — Smartphones medianos ─────────────── */
+@media (max-width: 480px) {
+  .hero-badge { font-size: 10px; letter-spacing: 1px; padding: 6px 14px; }
+  .hero-headline { letter-spacing: -1.5px; }
+  .hero-service-switcher { letter-spacing: -1.5px; margin-bottom: 20px; }
+  .hero-actions { flex-direction: column; align-items: flex-start; width: 100%; }
+  .btn-primary, .btn-secondary { width: 100%; justify-content: center; font-size: 14px; padding: 15px 20px; }
+
+  #nosotros { padding: 72px 0 48px; }
+  #impacto { padding: 56px 0; }
+  .counters-grid { grid-template-columns: 1fr 1fr; }
+  .counter-item { padding: 36px 12px; }
+  .counter-emoji { font-size: 22px; margin-bottom: 8px; }
+  .counter-label { font-size: 11px; }
+
+  .services-mini-grid { grid-template-columns: 1fr; gap: 12px; }
+  .service-mini-card { display: flex; align-items: center; gap: 16px; text-align: left; padding: 18px 20px; border-radius: 16px; }
+  .card-icon-wrap { flex-shrink: 0; margin: 0; }
+  .card-emoji { display: none; }
+  .service-mini-card:hover { transform: translateY(-4px); }
+  .service-mini-card-text { flex: 1; min-width: 0; }
+  .card-tag { display: none; }
+
+  #servicios { padding: 72px 0; }
   .tab-btn { font-size: 12px; padding: 8px 14px; }
+  .service-panel-content p { font-size: 14px; }
+  .service-bullets li { font-size: 13px; gap: 10px; padding: 10px 0; }
+
+  #proceso { padding: 72px 0; }
+  #bolsa { padding: 72px 0; }
+  #contacto { padding: 72px 0; }
+  .cta-card { padding: 44px 20px; border-radius: 24px; }
+  .cta-card p { font-size: 14px; margin-bottom: 32px; }
+
+  footer { padding: 40px 0 28px; }
+  .modal-overlay { padding: 0; align-items: flex-end; }
+  .modal-card { border-radius: 24px 24px 0 0; max-height: 92vh; padding: 24px 18px; }
+  .form-input, .form-textarea, .form-select { font-size: 16px; } /* Previene zoom en iOS */
+}
+
+/* ── 380px — Smartphones pequeños ─────────────── */
+@media (max-width: 380px) {
+  .container { padding: 0 16px; }
+  .hero-content { padding: 90px 16px 56px; }
+  .hero-badge { display: none; }
+  .hero-sub { font-size: 14px; margin-bottom: 28px; }
+
+  .counters-grid { grid-template-columns: 1fr 1fr; }
+  .counter-item:nth-child(odd) { border-right: 1px solid rgba(255,255,255,0.08); }
+
+  .tab-btn { font-size: 11px; padding: 7px 12px; }
+  .service-panel-content h2 { font-size: 26px; }
+  .btn-whatsapp-service { font-size: 13px; }
+
+  .cta-card { padding: 36px 16px; }
+  .whatsapp-btn, .btn-secondary { font-size: 13px; padding: 14px 20px; }
+
+  .job-card { padding: 16px; }
+  .job-emoji { font-size: 22px; }
+  .job-arrow { width: 34px; height: 34px; }
+}
+
+/* ── Reduced motion ───────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .marquee-track { animation: none; }
 }
 </style>
 </head>
@@ -814,7 +1028,19 @@ footer { background: #050D19; border-top: 1px solid var(--glass-border); padding
     <a href="#bolsa">Trabaja con Nosotros</a>
     <a href="#contacto" class="nav-cta">Contacto</a>
   </div>
+  <button class="hamburger" id="hamburger" aria-label="Menú" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+
+<!-- MOBILE DRAWER -->
+<div class="mobile-drawer" id="mobile-drawer" aria-hidden="true">
+  <a href="#nosotros" class="drawer-link">Nosotros</a>
+  <a href="#servicios" class="drawer-link">Servicios</a>
+  <a href="#proceso" class="drawer-link">Proceso</a>
+  <a href="#bolsa" class="drawer-link">Trabaja con Nosotros</a>
+  <a href="#contacto" class="drawer-link mobile-cta">Contacto</a>
+</div>
 
 <!-- HERO -->
 <section id="hero">
@@ -859,9 +1085,7 @@ footer { background: #050D19; border-top: 1px solid var(--glass-border); padding
         Hablar con un experto
       </a>
     </div>
-  </div>  
   </div>
-
 </section>
 
 <!-- MARQUEE -->
@@ -1051,7 +1275,7 @@ footer { background: #050D19; border-top: 1px solid var(--glass-border); padding
   <div class="impacto-bg"></div>
   <div class="impacto-pattern"></div>
   <div class="container" style="position:relative;z-index:1;">
-    <div style="text-align:center;margin-bottom:64px;" class="reveal">
+    <div style="text-align:center;margin-bottom:52px;" class="reveal">
       <div class="section-label" style="justify-content:center;">Nuestro impacto</div>
       <h2 class="section-title">Números que <span style="background:linear-gradient(90deg,var(--teal-light),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">hablan</span></h2>
     </div>
@@ -1064,7 +1288,7 @@ footer { background: #050D19; border-top: 1px solid var(--glass-border); padding
   </div>
 </section>
 
-<!-- SERVICIOS — Botones ahora disparan WhatsApp con mensaje predefinido -->
+<!-- SERVICIOS -->
 <section id="servicios">
   <div class="mesh-bg" style="opacity:0.4">
     <div class="mesh-orb" style="width:350px;height:350px;background:var(--cyan);bottom:0;right:10%;opacity:0.07;filter:blur(90px)"></div>
@@ -1117,7 +1341,7 @@ footer { background: #050D19; border-top: 1px solid var(--glass-border); padding
           <li><div class="bullet-dot"></div> Facturación Electrónica (CFDI)</li>
           <li><div class="bullet-dot"></div> Estrategias Fiscales</li>
         </ul>
-        <a href="#" class="btn-whatsapp-service" data-wa-service="Contabilidad y Asesoría Fiscal" data-wa-msg="Hola! 👋 Estoy interesado en los servicios de *Contabilidad y Asesoría Fiscal* de Muri Services. Me gustaría agendar una consulta gratuita. ¿Cuándo podríamos hablar?">
+        <a href="#" class="btn-whatsapp-service" data-wa-msg="Hola! 👋 Estoy interesado en los servicios de *Contabilidad y Asesoría Fiscal* de Muri Services. Me gustaría agendar una consulta gratuita. ¿Cuándo podríamos hablar?">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
           Solicitar consulta por WhatsApp
         </a>
@@ -1155,7 +1379,7 @@ footer { background: #050D19; border-top: 1px solid var(--glass-border); padding
           <li><div class="bullet-dot"></div> Derecho Laboral</li>
           <li><div class="bullet-dot"></div> Litigios y Representación</li>
         </ul>
-        <a href="#" class="btn-whatsapp-service" data-wa-service="Servicios Legales" data-wa-msg="Hola! 👋 Necesito asesoría legal de *Muri Services* (área de Abogados). Me gustaría conocer sus servicios de consultoría jurídica. ¿Cuándo podemos agendar una cita?">
+        <a href="#" class="btn-whatsapp-service" data-wa-msg="Hola! 👋 Necesito asesoría legal de *Muri Services* (área de Abogados). Me gustaría conocer sus servicios de consultoría jurídica. ¿Cuándo podemos agendar una cita?">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
           Solicitar asesoría por WhatsApp
         </a>
@@ -1199,7 +1423,7 @@ footer { background: #050D19; border-top: 1px solid var(--glass-border); padding
           <li><div class="bullet-dot"></div> Cobertura amplia y total</li>
           <li><div class="bullet-dot"></div> Asesoría de siniestros</li>
         </ul>
-        <a href="#" class="btn-whatsapp-service" data-wa-service="Seguros de Flotilla" data-wa-msg="Hola! 👋 Me interesa cotizar un *Seguro de Flotilla Vehicular* con Muri Services. ¿Podrían enviarme información sobre sus planes y precios?">
+        <a href="#" class="btn-whatsapp-service" data-wa-msg="Hola! 👋 Me interesa cotizar un *Seguro de Flotilla Vehicular* con Muri Services. ¿Podrían enviarme información sobre sus planes y precios?">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
           Solicitar cotización por WhatsApp
         </a>
@@ -1243,7 +1467,7 @@ footer { background: #050D19; border-top: 1px solid var(--glass-border); padding
           <li><div class="bullet-dot"></div> Redes e infraestructura</li>
           <li><div class="bullet-dot"></div> Sistemas empresariales</li>
         </ul>
-        <a href="#" class="btn-whatsapp-service" data-wa-service="Soporte en Tecnología" data-wa-msg="Hola! 👋 Necesito *Soporte en Sistemas y Tecnología* (Help Desk) para mi empresa con Muri Services. Me gustaría conocer sus planes y disponibilidad.">
+        <a href="#" class="btn-whatsapp-service" data-wa-msg="Hola! 👋 Necesito *Soporte en Sistemas y Tecnología* (Help Desk) para mi empresa con Muri Services. Me gustaría conocer sus planes y disponibilidad.">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
           Solicitar soporte por WhatsApp
         </a>
@@ -1270,9 +1494,7 @@ footer { background: #050D19; border-top: 1px solid var(--glass-border); padding
   </div>
 </section>
 
-<!-- ══════════════════════════════════════════
-     BOLSA DE TRABAJO — FUNCIONAL
-     ══════════════════════════════════════════ -->
+<!-- BOLSA DE TRABAJO -->
 <section id="bolsa">
   <div class="mesh-bg" style="opacity:0.3">
     <div class="mesh-orb" style="width:400px;height:400px;background:var(--teal);top:0;left:10%;opacity:0.1;filter:blur(100px)"></div>
@@ -1286,7 +1508,7 @@ footer { background: #050D19; border-top: 1px solid var(--glass-border); padding
       </div>
     </div>
     <div class="jobs-grid">
-      <div class="job-card reveal" data-job="Contador Público Titulado" data-area="Contabilidad" data-emoji="📊" data-tag1="Contabilidad" data-tag2="Fiscal">
+      <div class="job-card reveal" data-job="Contador Público Titulado" data-area="Contabilidad" data-emoji="📊">
         <div class="job-emoji">📊</div>
         <div class="job-info">
           <h4>Contador Público Titulado</h4>
@@ -1297,7 +1519,7 @@ footer { background: #050D19; border-top: 1px solid var(--glass-border); padding
         </div>
         <div class="job-arrow"><svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg></div>
       </div>
-      <div class="job-card reveal reveal-delay-1" data-job="Abogado Corporativo" data-area="Legal" data-emoji="⚖️" data-tag1="Legal" data-tag2="Corporativo">
+      <div class="job-card reveal reveal-delay-1" data-job="Abogado Corporativo" data-area="Legal" data-emoji="⚖️">
         <div class="job-emoji">⚖️</div>
         <div class="job-info">
           <h4>Abogado Corporativo</h4>
@@ -1308,7 +1530,7 @@ footer { background: #050D19; border-top: 1px solid var(--glass-border); padding
         </div>
         <div class="job-arrow"><svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg></div>
       </div>
-      <div class="job-card reveal reveal-delay-2" data-job="Agente de Seguros" data-area="Seguros" data-emoji="🛡️" data-tag1="Seguros" data-tag2="Flotilla">
+      <div class="job-card reveal reveal-delay-2" data-job="Agente de Seguros" data-area="Seguros" data-emoji="🛡️">
         <div class="job-emoji">🛡️</div>
         <div class="job-info">
           <h4>Agente de Seguros</h4>
@@ -1319,7 +1541,7 @@ footer { background: #050D19; border-top: 1px solid var(--glass-border); padding
         </div>
         <div class="job-arrow"><svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/></svg></div>
       </div>
-      <div class="job-card reveal reveal-delay-3" data-job="Técnico en Soporte IT" data-area="Tecnología" data-emoji="💻" data-tag1="Tecnología" data-tag2="IT">
+      <div class="job-card reveal reveal-delay-3" data-job="Técnico en Soporte IT" data-area="Tecnología" data-emoji="💻">
         <div class="job-emoji">💻</div>
         <div class="job-info">
           <h4>Técnico en Soporte IT</h4>
@@ -1340,7 +1562,7 @@ footer { background: #050D19; border-top: 1px solid var(--glass-border); padding
     <div class="cta-card reveal">
       <div class="cta-blob cta-blob-a"></div>
       <div class="cta-blob cta-blob-b"></div>
-      <div style="font-size:52px;margin-bottom:16px;position:relative;z-index:1;">🤝</div>
+      <div style="font-size:48px;margin-bottom:16px;position:relative;z-index:1;">🤝</div>
       <h2>¿Listo para transformar<br>tu empresa?</h2>
       <p>Agenda una consulta gratuita con nuestros especialistas hoy mismo.<br>Sin compromiso, sin costos ocultos. Te respondemos en menos de 24 horas.</p>
       <div class="cta-actions">
@@ -1403,9 +1625,7 @@ footer { background: #050D19; border-top: 1px solid var(--glass-border); padding
   </div>
 </footer>
 
-<!-- ══════════════════════════════════════════════════
-     MODAL DE POSTULACIÓN — BOLSA DE TRABAJO
-     ══════════════════════════════════════════════════ -->
+<!-- MODAL DE POSTULACIÓN -->
 <div id="job-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title-text">
   <div class="modal-card">
     <button class="modal-close" id="modal-close-btn" aria-label="Cerrar">✕</button>
@@ -1419,26 +1639,21 @@ footer { background: #050D19; border-top: 1px solid var(--glass-border); padding
       </div>
     </div>
 
-    <!-- Form body -->
     <div class="modal-form-body" id="modal-form-body">
       <form id="job-form" novalidate>
         <div class="form-grid">
-
           <div class="form-group">
             <label class="form-label" for="f-nombre">Nombre completo <span class="req">*</span></label>
             <input class="form-input" type="text" id="f-nombre" placeholder="Ej. María González" required autocomplete="name">
           </div>
-
           <div class="form-group">
             <label class="form-label" for="f-tel">Teléfono <span class="req">*</span></label>
             <input class="form-input" type="tel" id="f-tel" placeholder="55 1234 5678" required autocomplete="tel">
           </div>
-
           <div class="form-group full">
             <label class="form-label" for="f-email">Correo electrónico <span class="req">*</span></label>
             <input class="form-input" type="email" id="f-email" placeholder="tu@correo.com" required autocomplete="email">
           </div>
-
           <div class="form-group full">
             <label class="form-label" for="f-exp">Años de experiencia</label>
             <select class="form-select" id="f-exp">
@@ -1449,12 +1664,10 @@ footer { background: #050D19; border-top: 1px solid var(--glass-border); padding
               <option value="más de 5 años de experiencia">Más de 5 años</option>
             </select>
           </div>
-
           <div class="form-group full">
             <label class="form-label" for="f-msg">¿Por qué quieres unirte a Muri? <span class="req">*</span></label>
             <textarea class="form-textarea" id="f-msg" placeholder="Cuéntanos sobre tu motivación, experiencia relevante y qué valor aportas al equipo..." required></textarea>
           </div>
-
           <div class="form-group full">
             <label class="form-label">CV / Currículum (opcional)</label>
             <div class="file-upload-area" id="file-area">
@@ -1468,14 +1681,12 @@ footer { background: #050D19; border-top: 1px solid var(--glass-border); padding
             </div>
             <p style="font-size:11px;color:var(--gray);margin-top:8px;">💡 Al enviar, abriremos WhatsApp con tu información. Puedes adjuntar el CV directamente en el chat.</p>
           </div>
-
         </div>
 
         <button type="submit" class="btn-submit-job">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
           Enviar postulación por WhatsApp
         </button>
-
         <p class="form-note">
           Al enviar, se abrirá WhatsApp con tu información lista para enviar.<br>
           Tus datos solo se usan para el proceso de selección de Muri Services.
@@ -1483,7 +1694,6 @@ footer { background: #050D19; border-top: 1px solid var(--glass-border); padding
       </form>
     </div>
 
-    <!-- Success state -->
     <div class="modal-success" id="modal-success">
       <span class="modal-success-icon">🎉</span>
       <h3>¡Postulación enviada!</h3>
@@ -1493,26 +1703,22 @@ footer { background: #050D19; border-top: 1px solid var(--glass-border); padding
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════════════
-     JAVASCRIPT
-     ══════════════════════════════════════════════════ -->
 <script>
 /* ── CURSOR GLOW ──────────────────────────────── */
 const glow = document.getElementById('cursor-glow');
 let mx = 0, my = 0, gx = 0, gy = 0;
 document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
 function animGlow() {
-  gx += (mx - gx) * 0.08;
-  gy += (my - gy) * 0.08;
-  glow.style.left = gx + 'px';
-  glow.style.top  = gy + 'px';
+  gx += (mx - gx) * 0.08; gy += (my - gy) * 0.08;
+  glow.style.left = gx + 'px'; glow.style.top = gy + 'px';
   requestAnimationFrame(animGlow);
 }
 animGlow();
 
 /* ── PARTICLES ──────────────────────────────────── */
 const pContainer = document.getElementById('particles');
-for (let i = 0; i < 28; i++) {
+const particleCount = window.innerWidth < 640 ? 12 : 28;
+for (let i = 0; i < particleCount; i++) {
   const p = document.createElement('div');
   p.className = 'particle';
   const size = Math.random() * 3 + 1;
@@ -1526,10 +1732,39 @@ window.addEventListener('scroll', () => {
   navbar.classList.toggle('scrolled', window.scrollY > 60);
 }, { passive: true });
 
+/* ── HAMBURGER MENU ─────────────────────────────── */
+const hamburger  = document.getElementById('hamburger');
+const drawer     = document.getElementById('mobile-drawer');
+const drawerLinks = drawer.querySelectorAll('.drawer-link');
+
+function openDrawer() {
+  hamburger.classList.add('open');
+  drawer.classList.add('open');
+  hamburger.setAttribute('aria-expanded', 'true');
+  drawer.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+}
+function closeDrawer() {
+  hamburger.classList.remove('open');
+  drawer.classList.remove('open');
+  hamburger.setAttribute('aria-expanded', 'false');
+  drawer.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+}
+hamburger.addEventListener('click', () => {
+  hamburger.classList.contains('open') ? closeDrawer() : openDrawer();
+});
+drawerLinks.forEach(link => {
+  link.addEventListener('click', closeDrawer);
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && drawer.classList.contains('open')) closeDrawer();
+});
+
 /* ── REVEAL ON SCROLL ───────────────────────────── */
 const revealObs = new IntersectionObserver(entries => {
   entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-}, { threshold: 0.1 });
+}, { threshold: 0.08 });
 document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
 
 /* ── COUNTER ANIMATION ──────────────────────────── */
@@ -1551,7 +1786,7 @@ const counterObs = new IntersectionObserver(entries => {
       counterObs.unobserve(e.target);
     }
   });
-}, { threshold: 0.4 });
+}, { threshold: 0.3 });
 document.querySelectorAll('#impacto').forEach(s => counterObs.observe(s));
 
 /* ── SERVICE TABS ───────────────────────────────── */
@@ -1563,22 +1798,20 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
     const panel = document.getElementById('tab-' + btn.dataset.tab);
     if (panel) {
       panel.classList.add('active');
-      panel.style.animation = 'none';
-      panel.offsetHeight;
+      panel.style.animation = 'none'; panel.offsetHeight;
       panel.style.animation = 'fade-up 0.5s ease both';
     }
+    // Scroll tab into view on mobile
+    btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
   });
 });
 
 /* ── WHATSAPP SERVICE BUTTONS ───────────────────── */
-/* Cada botón lee su propio data-wa-msg y abre WhatsApp con ese mensaje */
 document.querySelectorAll('.btn-whatsapp-service').forEach(btn => {
   btn.addEventListener('click', e => {
     e.preventDefault();
     const msg = btn.getAttribute('data-wa-msg') || 'Hola! Me interesa uno de sus servicios.';
-    const phone = '525500000000'; // ← Cambia al número real
-    const url = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
-    window.open(url, '_blank');
+    window.open(`https://wa.me/525500000000?text=${encodeURIComponent(msg)}`, '_blank');
   });
 });
 
@@ -1590,21 +1823,21 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
   });
 });
 
-/* ── CARD TILT ──────────────────────────────────── */
-document.querySelectorAll('.service-mini-card, .hfc').forEach(card => {
-  card.addEventListener('mousemove', e => {
-    const rect = card.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width  - 0.5) * 12;
-    const y = ((e.clientY - rect.top)  / rect.height - 0.5) * 12;
-    card.style.transform = `translateY(-10px) rotateX(${-y}deg) rotateY(${x}deg)`;
+/* ── CARD TILT (desktop only) ────────────────────── */
+if (window.matchMedia('(pointer: fine)').matches) {
+  document.querySelectorAll('.service-mini-card, .hfc').forEach(card => {
+    card.addEventListener('mousemove', e => {
+      const rect = card.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width  - 0.5) * 12;
+      const y = ((e.clientY - rect.top)  / rect.height - 0.5) * 12;
+      card.style.transform = `translateY(-10px) rotateX(${-y}deg) rotateY(${x}deg)`;
+    });
+    card.addEventListener('mouseleave', () => { card.style.transform = ''; card.style.transition = 'transform 0.5s ease'; });
+    card.addEventListener('mouseenter', () => { card.style.transition = 'transform 0.15s ease'; });
   });
-  card.addEventListener('mouseleave', () => { card.style.transform = ''; card.style.transition = 'transform 0.5s ease'; });
-  card.addEventListener('mouseenter', () => { card.style.transition = 'transform 0.15s ease'; });
-});
+}
 
-/* ════════════════════════════════════════════════
-   BOLSA DE TRABAJO — MODAL LOGIC
-   ════════════════════════════════════════════════ */
+/* ── MODAL ──────────────────────────────────────── */
 const modal        = document.getElementById('job-modal');
 const modalEmoji   = document.getElementById('modal-emoji');
 const modalTitle   = document.getElementById('modal-title-text');
@@ -1614,39 +1847,26 @@ const modalFormBody= document.getElementById('modal-form-body');
 const modalSuccess = document.getElementById('modal-success');
 let   currentJob   = {};
 
-/* Open modal when job card clicked */
 document.querySelectorAll('.job-card').forEach(card => {
   card.addEventListener('click', () => {
-    currentJob = {
-      job:   card.dataset.job,
-      area:  card.dataset.area,
-      emoji: card.dataset.emoji,
-    };
-    // Populate header
+    currentJob = { job: card.dataset.job, area: card.dataset.area, emoji: card.dataset.emoji };
     modalEmoji.textContent = currentJob.emoji;
     modalTitle.textContent = currentJob.job;
     modalArea.textContent  = currentJob.area;
-
-    // Reset form
     modalForm.reset();
     document.getElementById('file-name-display').classList.remove('show');
     document.getElementById('file-name-display').textContent = '';
     document.getElementById('file-area').classList.remove('has-file');
     modalFormBody.classList.remove('hidden');
     modalSuccess.classList.remove('show');
-
-    // Clear field borders
     modalForm.querySelectorAll('.form-input, .form-textarea, .form-select').forEach(f => {
-      f.style.borderColor = '';
+      f.style.borderColor = ''; f.style.boxShadow = '';
     });
-
-    // Open
     modal.classList.add('open');
     document.body.style.overflow = 'hidden';
   });
 });
 
-/* Close modal */
 function closeModal() {
   modal.classList.remove('open');
   document.body.style.overflow = '';
@@ -1655,19 +1875,16 @@ document.getElementById('modal-close-btn').addEventListener('click', closeModal)
 modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && modal.classList.contains('open')) closeModal(); });
 
-/* File select handler */
 function handleFileSelect(input) {
   const fileArea    = document.getElementById('file-area');
   const fileDisplay = document.getElementById('file-name-display');
   if (input.files && input.files[0]) {
-    const name = input.files[0].name;
-    fileDisplay.textContent = '📎 ' + name;
+    fileDisplay.textContent = '📎 ' + input.files[0].name;
     fileDisplay.classList.add('show');
     fileArea.classList.add('has-file');
   }
 }
 
-/* Validate field */
 function validateField(el) {
   const ok = el.value.trim() !== '' || !el.required;
   el.style.borderColor = ok ? '' : 'rgba(255,80,80,0.6)';
@@ -1675,24 +1892,16 @@ function validateField(el) {
   return ok;
 }
 
-/* Form submit → build WhatsApp message */
 modalForm.addEventListener('submit', e => {
   e.preventDefault();
-
   const nombre = document.getElementById('f-nombre');
   const tel    = document.getElementById('f-tel');
   const email  = document.getElementById('f-email');
   const msg    = document.getElementById('f-msg');
-
-  // Validate required
   const ok = [nombre, tel, email, msg].map(validateField).every(Boolean);
   if (!ok) return;
-
-  const exp      = document.getElementById('f-exp').value;
-  const hasCV    = document.getElementById('f-cv').files.length > 0;
-  const cvNote   = hasCV ? `\n📎 *CV:* Te lo envío en este chat.` : '';
-  const expNote  = exp ? `\n📅 *Experiencia:* ${exp}` : '';
-
+  const exp   = document.getElementById('f-exp').value;
+  const hasCV = document.getElementById('f-cv').files.length > 0;
   const waMsg =
     `🙋 *Postulación — ${currentJob.job}*\n` +
     `📌 *Área:* ${currentJob.area}\n` +
@@ -1700,21 +1909,15 @@ modalForm.addEventListener('submit', e => {
     `👤 *Nombre:* ${nombre.value.trim()}\n` +
     `📞 *Teléfono:* ${tel.value.trim()}\n` +
     `✉️ *Correo:* ${email.value.trim()}` +
-    expNote +
-    cvNote +
+    (exp ? `\n📅 *Experiencia:* ${exp}` : '') +
+    (hasCV ? `\n📎 *CV:* Te lo envío en este chat.` : '') +
     `\n━━━━━━━━━━━━━━━━\n` +
     `💬 *Presentación:*\n${msg.value.trim()}\n` +
     `━━━━━━━━━━━━━━━━\n` +
     `Enviado desde muriservices.com`;
-
-  const phone = '525500000000'; // ← Cambia al número real
-  window.open(`https://wa.me/${phone}?text=${encodeURIComponent(waMsg)}`, '_blank');
-
-  // Show success state
+  window.open(`https://wa.me/525500000000?text=${encodeURIComponent(waMsg)}`, '_blank');
   modalFormBody.classList.add('hidden');
-  setTimeout(() => {
-    modalSuccess.classList.add('show');
-  }, 200);
+  setTimeout(() => modalSuccess.classList.add('show'), 200);
 });
 </script>
 </body>
