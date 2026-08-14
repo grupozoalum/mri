@@ -22,12 +22,18 @@
   --r-xl: 24px;
   --r-2xl: 32px;
 }
-html { scroll-behavior: smooth; }
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+html { 
+  scroll-behavior: smooth; 
+}
 body {
   font-family: 'Inter', sans-serif;
   background: var(--navy);
   color: var(--white);
-  overflow-x: hidden;
+  position: relative;
 }
 
 /* ── CURSOR GLOW ───────────────────────────── */
@@ -326,6 +332,7 @@ nav.scrolled {
 .marquee-section {
   background: linear-gradient(90deg, var(--teal) 0%, #0E6B78 40%, var(--teal-light) 70%, var(--teal) 100%);
   padding: 18px 0; overflow: hidden; position: relative;
+  width: 100%;
 }
 .marquee-section::before, .marquee-section::after {
   content: ''; position: absolute; top: 0; bottom: 0; width: 60px; z-index: 2;
@@ -363,6 +370,7 @@ section { position: relative; }
 .hub-glow-bg {
   position: absolute; top: 50%; left: 50%;
   width: 340px; height: 340px; border-radius: 50%;
+  max-width: 100%;
   transform: translate(-50%,-50%);
   background: radial-gradient(circle, rgba(27,134,148,0.18) 0%, transparent 70%);
   animation: orb-drift 10s ease-in-out infinite alternate;
