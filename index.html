@@ -342,9 +342,10 @@ body.menu-abierto .panel a{opacity:1;transform:none;transition-delay:calc(.18s +
 .dato a:hover{color:var(--muri-alto)}
 
 /* ---------- pie ---------- */
-.pie{background:#081A1E;color:rgba(255,255,255,.6);padding:56px 0 30px;font-size:.9rem}
+.pie{background:#081A1E;color:rgba(255,255,255,.6);padding:52px 0 28px;font-size:.9rem}
 .pie-grid{display:flex;flex-wrap:wrap;gap:30px;justify-content:space-between;align-items:flex-start}
 .pie .logo{color:#fff;--logo-accent:var(--muri-alto)}
+.pie .logo svg{height:42px}
 .pie nav{display:flex;flex-wrap:wrap;gap:8px 26px;font-family:Archivo,sans-serif;font-size:.86rem}
 .pie nav a:hover{color:#fff}
 .pie-abajo{margin-top:40px;padding-top:20px;border-top:1px solid rgba(255,255,255,.1);display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;font-size:.8rem}
@@ -496,9 +497,9 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 .dato a+br+a{margin-top:2px}
 
 /* pie: marca de agua */
-.marca-grande{margin-bottom:46px;color:rgba(255,255,255,.06);--logo-accent:rgba(255,255,255,.06);clip-path:inset(0 100% 0 0);transition:clip-path 1.4s var(--ease)}
-.marca-grande.in{clip-path:inset(0 0 0 0)}
-.marca-grande svg{width:100%;height:auto}
+.marca-grande{margin-bottom:30px;color:rgba(255,255,255,.14);--logo-accent:rgba(255,255,255,.14)}
+.marca-grande svg{width:min(70%,270px);height:auto;clip-path:inset(0 100% 0 0);transition:clip-path 1.3s var(--ease)}
+.marca-grande.in svg{clip-path:inset(0 0 0 0)}
 
 /* botón subir con anillo de progreso */
 .arriba{position:fixed}
@@ -525,14 +526,15 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 }
 @media (max-width:760px){
   .reloj>div{min-width:0;flex:1;padding:10px 4px}
-  .marca-grande{margin-bottom:32px}
+  .marca-grande{margin-bottom:24px}
+  .marca-grande svg{width:min(60%,190px)}
 }
 @media (prefers-reduced-motion:reduce){
   #cortina,#grano,#halo{display:none}
   .aurora i{animation:none}
   .pal>span{transform:none}
   .icono *{stroke-dashoffset:0}
-  .marca-grande{clip-path:none}
+  .marca-grande svg{clip-path:none}
   .wapp::before{animation:none}
   .pista{animation:none}
 }
@@ -1070,7 +1072,6 @@ input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;bac
 
 <footer class="pie">
   <div class="envoltura">
-    <div class="marca-grande" aria-hidden="true"><svg viewBox="0 0 362.9 146" preserveAspectRatio="xMidYMid meet"><use href="#muri-logo"></use></svg></div>
     <div class="pie-grid">
       <a class="logo" href="#inicio" aria-label="MURI"><svg viewBox="0 0 362.9 146" style="height:34px" role="img"><use href="#muri-logo"></use></svg></a>
       <nav>
